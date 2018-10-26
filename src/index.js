@@ -3,9 +3,24 @@ import ReactDOM from "react-dom";
 
 import "./styles.css";
 
+function useInput(defaultValue) {
+  let [value, setValue] = useState(defaultValue);
+
+  function onChange(e) {
+    setValue(e.target.value);
+  }
+
+  return [value, onChange];
+}
+
+function Todo({ defaultTask, editable }) {
+  let taskInput = useInput(defaultTask);
+
+  return editable ? <input {...taskInput} /> : <div>{defaultTask}</div>;
+}
+
 function App() {
-  let task = useState("42");
-  return <div>{task}</div>;
+  return <Todo defaultTask={"Eat"} editable />;
 }
 
 const rootElement = document.getElementById("root");
