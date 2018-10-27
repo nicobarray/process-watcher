@@ -32,7 +32,6 @@ export default function ProcessRun() {
     <ProcessViewBase>
       <Toolbar>
         <Typography variant="h6" color="inherit">
-          Process Watcher -{" "}
           {running ? (
             <>
               Started <StartedSince />

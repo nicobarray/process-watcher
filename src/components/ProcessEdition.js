@@ -15,7 +15,7 @@ export default function() {
     <ProcessViewBase>
       <Toolbar>
         <Typography variant="h6" color="inherit">
-          Process Watcher - Edition
+          Edition
         </Typography>
         <SpaceGrow />
         <ButtonGroup>

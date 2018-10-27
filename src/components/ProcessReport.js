@@ -32,7 +32,7 @@ export default function ProcessReport() {
     <ProcessViewBase>
       <Toolbar>
         <Typography variant="h6" color="inherit">
-          Process Watcher - Report
+          Report
         </Typography>
         <SpaceGrow />
         <ButtonGroup>
