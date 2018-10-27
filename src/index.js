@@ -1,14 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
-import "./styles.css";
-
-import Process from "./components/Process";
+import Process from "./views/Process";
 import Store from "./Store";
 
 function App() {
   return (
     <Store>
+      <CssBaseline />
       <Process />
     </Store>
   );
