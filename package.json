@@ -1,7 +1,7 @@
 {
-  "name": "new",
+  "name": "process-watcher",
   "version": "1.0.0",
-  "description": "",
+  "description": "Process = todo list + rules",
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
