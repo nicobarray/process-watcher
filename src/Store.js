@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer } from "react";
 
 const initialValue = {
-  todos: []
+  todos: [{ value: "Checkout latest master HEAD from origin", done: false }]
 };
 
 function reducer(prevState, action) {
@@ -19,6 +19,12 @@ function reducer(prevState, action) {
     };
   }
 
+  if (type === "DELETE_TODO") {
+    return {
+      ...prevState,
+      todos: prevState.todos.filter((_, index) => action.index !== index)
+    };
+  }
   return prevState;
 }
 
