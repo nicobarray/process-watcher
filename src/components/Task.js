@@ -86,8 +86,8 @@ export default function Task({ value, index, selected }) {
   const todo = state.todos[index];
 
   return (
-    <ExpansionPanel expanded={selected} expandIcon={<ExpandMoreIcon />}>
-      <ExpansionPanelSummary>
+    <ExpansionPanel expanded={selected}>
+      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="headline" color="inherit">
           {index + 1}. {value}
         </Typography>

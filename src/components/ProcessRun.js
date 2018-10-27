@@ -53,14 +53,25 @@ export default function ProcessRun() {
           >
             Start process
           </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={running}
-            onClick={() => dispatch({ type: "ABORT_PROCESS" })}
-          >
-            Back
-          </Button>
+          {running ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() =>
+                dispatch({ type: "ABORT_PROCESS", timestamp: Date.now() })
+              }
+            >
+              Abort
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => dispatch({ type: "CANCEL_PROCESS" })}
+            >
+              Back
+            </Button>
+          )}
         </ButtonGroup>
       </Toolbar>
       {state.todos.map((todo, index) => {

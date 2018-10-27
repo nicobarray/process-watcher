@@ -25,8 +25,9 @@ const initialValue = {
     }
   ],
   process: {
-    state: ProcessState.PROCESS,
+    state: ProcessState.EDITION,
     startTimestamp: null,
+    endTimestamp: null,
     running: false,
     currentIndex: 0
   }
@@ -34,8 +35,6 @@ const initialValue = {
 
 function reducer(prevState, action) {
   const { type } = action;
-
-  console.log("Action", type);
 
   if (type === "ADD_TODO") {
     return {
@@ -67,12 +66,31 @@ function reducer(prevState, action) {
     };
   }
 
-  if (type === "LOCK_PROCESS" && prevState.state === ProcessState.EDITION) {
+  if (
+    type === "LOCK_PROCESS" &&
+    prevState.process.state === ProcessState.EDITION
+  ) {
+    return {
+      ...prevState,
+      todos: prevState.todos.map(todo => ({
+        ...todo,
+        status: TodoStatus.CREATED
+      })),
+      process: {
+        ...prevState.process,
+        state: ProcessState.PROCESS,
+        currentIndex: 0,
+        running: false
+      }
+    };
+  }
+
+  if (type === "CANCEL_PROCESS") {
     return {
       ...prevState,
       process: {
         ...prevState.process,
-        state: ProcessState.PROCESS
+        state: ProcessState.EDITION
       }
     };
   }
@@ -82,7 +100,9 @@ function reducer(prevState, action) {
       ...prevState,
       process: {
         ...prevState.process,
-        state: ProcessState.REPORT
+        state: ProcessState.REPORT,
+        running: false,
+        endTimestamp: action.timestamp
       }
     };
   }
