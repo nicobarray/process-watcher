@@ -163,6 +163,12 @@ function reducer(prevState, action) {
     };
   }
 
+  if (type === "DELETE_TODO") {
+    return {
+      ...prevState,
+      todos: prevState.todos.filter((_, index) => action.index !== index)
+    };
+  }
   return prevState;
 }
 
