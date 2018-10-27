@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
-import Process from "./views/ProcessEdition";
+import Process from "./views/Process";
 import Store from "./Store";
 
 function App() {

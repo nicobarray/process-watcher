@@ -7,7 +7,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 
-import CommentIcon from "@material-ui/icons/Comment";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import useInput from "../hooks/useInput";
@@ -25,18 +24,17 @@ export default function Todo({ style, value, done, editable, index }) {
   let task = useInput(value);
   let dispatch = useStoreDispatch();
 
-  return editable ? (
-    <TodoField {...task} />
-  ) : (
-    <TodoItem key={value} role={undefined} dense button>
-      <ListItemText primary={task.value} />
-      <ListItemSecondaryAction>
-        <IconButton aria-label="Delete Task">
-          <DeleteIcon
-            onClick={() => dispatch({ type: "DELETE_TODO", index })}
-          />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </TodoItem>
+  return (
+    <ListItem>
+      <TodoField
+        {...task}
+        onBlur={e =>
+          dispatch({ type: "UPDATE_TODO", value: e.target.value, index })
+        }
+      />
+      <IconButton aria-label="Delete Task">
+        <DeleteIcon onClick={() => dispatch({ type: "DELETE_TODO", index })} />
+      </IconButton>
+    </ListItem>
   );
 }
