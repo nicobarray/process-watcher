@@ -1,12 +1,42 @@
 import React from "react";
+import styled from "styled-components";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import ListItemText from "@material-ui/core/ListItemText";
+import Checkbox from "@material-ui/core/Checkbox";
+import IconButton from "@material-ui/core/IconButton";
+import TextField from "@material-ui/core/TextField";
+
+import CommentIcon from "@material-ui/icons/Comment";
+import DeleteIcon from "@material-ui/icons/Delete";
+
 import useInput from "../hooks/useInput";
+import { useStoreDispatch } from "../Store";
 
-export default function Todo({ style, value, editable }) {
+const TodoField = styled(TextField).attrs({ fullWidth: true })`
+  padding: 16px 24px !important;
+`;
+
+const TodoItem = styled(ListItem)`
+ padding: 22px 24px !important;
+`;
+
+export default function Todo({ style, value, done, editable, index }) {
   let task = useInput(value);
+  let dispatch = useStoreDispatch();
 
-  return (
-    <div style={style}>
-      {editable ? <input {...task} /> : <div>{task.value}</div>}
-    </div>
+  return editable ? (
+    <TodoField {...task} />
+  ) : (
+    <TodoItem key={value} role={undefined} dense button>
+      <ListItemText primary={task.value} />
+      <ListItemSecondaryAction>
+        <IconButton aria-label="Delete Task">
+          <DeleteIcon
+            onClick={() => dispatch({ type: "DELETE_TODO", index })}
+          />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </TodoItem>
   );
 }
