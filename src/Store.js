@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useReducer } from "react";
+import slack from "slack";
+
 import { ProcessState, TodoStatus } from "./constants";
+import { dispatch } from "rxjs/internal/observable/pairs";
 
 const initialValue = {
   todos: [
@@ -25,16 +28,25 @@ const initialValue = {
     }
   ],
   process: {
-    state: ProcessState.EDITION,
+    state: ProcessState.REPORT,
     startTimestamp: null,
     endTimestamp: null,
     running: false,
     currentIndex: 0
+  },
+  slack: {
+    channel: "",
+    token: ""
+  },
+  drawer: {
+    open: false
   }
 };
 
 function reducer(prevState, action) {
   const { type } = action;
+
+  console.log(action);
 
   if (type === "ADD_TODO") {
     return {
@@ -169,13 +181,69 @@ function reducer(prevState, action) {
       todos: prevState.todos.filter((_, index) => action.index !== index)
     };
   }
+
+  if (type === "CLOSE_DRAWER") {
+    return {
+      ...prevState,
+      drawer: {
+        ...prevState.drawer,
+        open: false
+      }
+    };
+  }
+
+  if (type === "OPEN_DRAWER") {
+    return {
+      ...prevState,
+      drawer: {
+        ...prevState.drawer,
+        open: true
+      }
+    };
+  }
+
+  if (type === "UPDATE_SETTINGS") {
+    const { value, path } = action;
+
+    return {
+      ...prevState,
+      [path[0]]: {
+        ...prevState[path[0]],
+        [path[1]]: value
+      }
+    };
+  }
   return prevState;
 }
+
+const middleware = async (store, action) => {
+  const { type } = action;
+
+  if (type === "START_PROCESS") {
+    try {
+      const bot = new slack({ token: store[0].slack.token });
+      await bot.chat.postMessage({
+        token: store[0].slack.token,
+        channel: "#general",
+        text: `Starting process 🙈`
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  return action;
+};
 
 const StoreContext = createContext(initialValue);
 
 export default function Store(props) {
-  const store = useReducer(reducer, initialValue);
+  let localStorageState = localStorage.getItem("state");
+  const store = useReducer((state, action) => {
+    let nextState = reducer(state, action);
+    localStorage.setItem("state", JSON.stringify(nextState));
+    return nextState;
+  }, localStorageState ? JSON.parse(localStorageState) : initialValue);
 
   return (
     <StoreContext.Provider value={store}>
@@ -184,9 +252,15 @@ export default function Store(props) {
   );
 }
 
-export function useStore() {
+export function useStore(asynchronously = false) {
   let store = useContext(StoreContext);
-  return store;
+
+  async function asyncDispatch(action) {
+    dispatch(await middleware(store, action));
+  }
+
+  let [state, dispatch] = store;
+  return [state, asynchronously ? asyncDispatch : dispatch];
 }
 
 export function useStoreState() {

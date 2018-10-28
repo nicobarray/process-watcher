@@ -7,7 +7,9 @@ import Markdown from "react-markdown";
 
 import moment from "../lib/moment";
 import { useStore } from "../Store";
-import ProcessViewBase, { SpaceGrow, ButtonGroup } from "./ProcessViewBase";
+
+import AppBar from "./AppBar";
+import ViewBase, { SpaceGrow, ButtonGroup } from "./ViewBase";
 
 export default function ProcessReport() {
   const [state, dispatch] = useStore();
@@ -29,12 +31,8 @@ export default function ProcessReport() {
   `;
 
   return (
-    <ProcessViewBase>
-      <Toolbar>
-        <Typography variant="h6" color="inherit">
-          Report
-        </Typography>
-        <SpaceGrow />
+    <>
+      <AppBar title={"Report"}>
         <ButtonGroup>
           <Button
             variant="contained"
@@ -44,16 +42,18 @@ export default function ProcessReport() {
             Back
           </Button>
         </ButtonGroup>
-      </Toolbar>
-      <Paper
-        style={{
-          height: "50vh",
-          padding: 32,
-          fontFamily: "Roboto"
-        }}
-      >
-        <Markdown source={report} />
-      </Paper>
-    </ProcessViewBase>
+      </AppBar>
+      <ViewBase>
+        <Paper
+          style={{
+            height: "50vh",
+            padding: 32,
+            fontFamily: "Roboto"
+          }}
+        >
+          <Markdown source={report} />
+        </Paper>
+      </ViewBase>
+    </>
   );
 }

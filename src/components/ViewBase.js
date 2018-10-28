@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Grid from "@material-ui/core/Grid";
 
 const ProcessView = styled(Grid)`
-  padding: 16px 32px!important;
+  padding: 16px 32px !important;
 `;
 
 export const SpaceGrow = styled.div`
@@ -16,7 +16,7 @@ export const ButtonGroup = styled.div`
   }
 `;
 
-export default function ProcessViewBase({ children }) {
+export default function ViewBase({ children }) {
   return (
     <ProcessView container spacing={16} direction="column" justify="center">
       {children}

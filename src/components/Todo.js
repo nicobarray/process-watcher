@@ -1,9 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
-import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 
@@ -14,10 +11,6 @@ import { useStoreDispatch } from "../Store";
 
 const TodoField = styled(TextField).attrs({ fullWidth: true })`
   padding: 16px 24px !important;
-`;
-
-const TodoItem = styled(ListItem)`
- padding: 22px 24px !important;
 `;
 
 export default function Todo({ style, value, done, editable, index }) {

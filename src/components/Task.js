@@ -9,7 +9,7 @@ import Button from "@material-ui/core/Button";
 import { useStore, useStoreDispatch } from "../Store";
 import { TodoStatus } from "../constants";
 
-import { SpaceGrow, ButtonGroup } from "./ProcessViewBase";
+import { SpaceGrow, ButtonGroup } from "./ViewBase";
 
 function TaskActions({ running, selected, index }) {
   let dispatch = useStoreDispatch();

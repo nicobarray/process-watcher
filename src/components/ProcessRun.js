@@ -6,7 +6,8 @@ import moment from "moment";
 
 import useRaf from "../hooks/useRaf";
 import { useStore } from "../Store";
-import ProcessViewBase, { SpaceGrow, ButtonGroup } from "./ProcessViewBase";
+import ViewBase, { SpaceGrow, ButtonGroup } from "./ViewBase";
+import AppBar from "./AppBar";
 import Task from "./Task";
 
 function StartedSince() {
@@ -24,23 +25,23 @@ function StartedSince() {
 }
 
 export default function ProcessRun() {
-  let [state, dispatch] = useStore();
+  let [state, dispatch] = useStore(true);
 
   const running = state.process.running;
 
   return (
-    <ProcessViewBase>
-      <Toolbar>
-        <Typography variant="h6" color="inherit">
-          {running ? (
+    <>
+      <AppBar
+        title={
+          running ? (
             <>
               Started <StartedSince />
             </>
           ) : (
             "Check Process"
-          )}
-        </Typography>
-        <SpaceGrow />
+          )
+        }
+      >
         <ButtonGroup>
           <Button
             variant="contained"
@@ -72,17 +73,19 @@ export default function ProcessRun() {
             </Button>
           )}
         </ButtonGroup>
-      </Toolbar>
-      {state.todos.map((todo, index) => {
-        return (
-          <Task
-            key={index}
-            index={index}
-            value={todo.value}
-            selected={state.process.currentIndex === index}
-          />
-        );
-      })}
-    </ProcessViewBase>
+      </AppBar>
+      <ViewBase>
+        {state.todos.map((todo, index) => {
+          return (
+            <Task
+              key={index}
+              index={index}
+              value={todo.value}
+              selected={state.process.currentIndex === index}
+            />
+          );
+        })}
+      </ViewBase>
+    </>
   );
 }

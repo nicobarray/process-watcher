@@ -1,23 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 
 import { useStore } from "../Store";
 import Todos from "./Todos";
-import ProcessViewBase, { SpaceGrow, ButtonGroup } from "./ProcessViewBase";
+import AppBar from "./AppBar";
+import ViewBase, { ButtonGroup } from "./ViewBase";
 
 export default function() {
   let [state, dispatch] = useStore();
 
   return (
-    <ProcessViewBase>
-      <Toolbar>
-        <Typography variant="h6" color="inherit">
-          Edition
-        </Typography>
-        <SpaceGrow />
+    <>
+      <AppBar title="Edition">
         <ButtonGroup>
           <Button
             variant="contained"
@@ -37,10 +32,12 @@ export default function() {
             Next
           </Button>
         </ButtonGroup>
-      </Toolbar>
-      <Grid item>
-        <Todos />
-      </Grid>
-    </ProcessViewBase>
+      </AppBar>
+      <ViewBase>
+        <Grid item>
+          <Todos />
+        </Grid>
+      </ViewBase>
+    </>
   );
 }
