@@ -53,6 +53,14 @@ export default function Settings(props) {
             margin="normal"
             variant="outlined"
           />
+          <TextField
+            label="Slack Timestamp"
+            style={{ marginLeft: 16 }}
+            value={state.slack.ts}
+            margin="normal"
+            variant="outlined"
+            disabled={true}
+          />
         </Paper>
       </ViewBase>
     </>

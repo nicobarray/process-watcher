@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer } from "react";
 import slack from "slack";
 
 import { ProcessState, TodoStatus } from "./constants";
-import { dispatch } from "rxjs/internal/observable/pairs";
+import sendMessage, { resetSlack } from "./lib/slack";
 
 const initialValue = {
   todos: [
@@ -28,7 +28,7 @@ const initialValue = {
     }
   ],
   process: {
-    state: ProcessState.REPORT,
+    state: ProcessState.EDITION,
     startTimestamp: null,
     endTimestamp: null,
     running: false,
@@ -36,7 +36,8 @@ const initialValue = {
   },
   slack: {
     channel: "",
-    token: ""
+    token: "",
+    ts: ""
   },
   drawer: {
     open: false
@@ -216,16 +217,50 @@ function reducer(prevState, action) {
   return prevState;
 }
 
-const middleware = async (store, action) => {
+const reduceUpdateMessage = state => {
+  function emoji(todo, selected) {
+    if (selected) {
+      return "📦";
+    } else {
+      if (todo.status === TodoStatus.VALIDATED) {
+        return "✅";
+      } else if (todo.status === TodoStatus.FAILED) {
+        return "💥";
+      } else {
+        return "";
+      }
+    }
+  }
+
+  let message = state.todos.reduce((acc, todo, index) => {
+    return `${acc}${index > 0 ? "\n" : ""}${index + 1}. ${todo.value} ${emoji(
+      todo,
+      index === state.process.currentIndex
+    )}`;
+  }, "");
+  return `<Process title>\n\n${message}`;
+};
+
+const middleware = async (store, action, next) => {
   const { type } = action;
 
-  if (type === "START_PROCESS") {
+  next(action);
+
+  let [state, dispatch] = store;
+
+  if (
+    type === "START_PROCESS" ||
+    type === "NEXT_STEP" ||
+    type === "ABORT_PROCESS"
+  ) {
+    // Remove the saved `ts`
+    if (type === "START_PROCESS") {
+      resetSlack();
+    }
+
     try {
-      const bot = new slack({ token: store[0].slack.token });
-      await bot.chat.postMessage({
-        token: store[0].slack.token,
-        channel: "#general",
-        text: `Starting process 🙈`
+      const ts = await sendMessage(reduceUpdateMessage(state), {
+        token: state.slack.token
       });
     } catch (err) {
       console.log(err);
@@ -254,12 +289,14 @@ export default function Store(props) {
 
 export function useStore(asynchronously = false) {
   let store = useContext(StoreContext);
+  let [state, dispatch] = store;
 
   async function asyncDispatch(action) {
-    dispatch(await middleware(store, action));
+    await middleware(store, action, () => {
+      dispatch(action);
+    });
   }
 
-  let [state, dispatch] = store;
   return [state, asynchronously ? asyncDispatch : dispatch];
 }
 

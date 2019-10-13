@@ -12,7 +12,7 @@ import { TodoStatus } from "../constants";
 import { SpaceGrow, ButtonGroup } from "./ViewBase";
 
 function TaskActions({ running, selected, index }) {
-  let dispatch = useStoreDispatch();
+  let [_, dispatch] = useStore(true);
 
   function onClick(callback) {
     return function(e) {
